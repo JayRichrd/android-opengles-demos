@@ -1,14 +1,14 @@
 package com.demo.openglesdemos;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActivityManager;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.demo.openglesdemos.render.DemoRender;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.demo.openglesdemos.render.TriangleRender;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "opengl-demos";
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         //使用 opengles 3.0
         glSurfaceView.setEGLContextClientVersion(GL_VERSION);
         //设置渲染器
-        glSurfaceView.setRenderer(new DemoRender());
+        glSurfaceView.setRenderer(new TriangleRender());
         //将 GLSurfaceView 显示到 Activity
         setContentView(glSurfaceView);
 
