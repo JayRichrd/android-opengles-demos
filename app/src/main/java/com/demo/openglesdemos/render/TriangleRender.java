@@ -24,8 +24,16 @@ public class TriangleRender implements GLSurfaceView.Renderer {
             0.0f, 0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f};
+    //顶点颜色
+    private static final float[] verticeColors = {
+            0.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f
+    };
     //native 内存中存储顶点
     private FloatBuffer verticesBuffer;
+    //native 内存中存储的顶点颜色
+    private FloatBuffer verticeColorsBuffer;
     //程序
     private int program;
 
@@ -38,6 +46,15 @@ public class TriangleRender implements GLSurfaceView.Renderer {
         verticesBuffer
                 .put(vertices)//将顶点拷贝到 native 内存中
                 .position(0);//每次 put position 都会 + 1，需要在绘制前重置为0
+
+        //将顶点颜色数据拷贝映射到 native 内存中，以便opengl能够访问
+        verticeColorsBuffer = ByteBuffer
+                .allocateDirect(verticeColors.length * BYTES_PER_FLOAT)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        verticeColorsBuffer
+                .put(verticeColors)
+                .position(0);
     }
 
     @Override
@@ -52,8 +69,6 @@ public class TriangleRender implements GLSurfaceView.Renderer {
         //绑定着色器到程序
         GLES30.glAttachShader(tmpProgram, vertextShader);
         GLES30.glAttachShader(tmpProgram, fragmentShader);
-        //绑定属性位置 vPosition ：0
-//        GLES30.glBindAttribLocation(tmpProgram, 0, "vPosition");
         //连接程序
         GLES30.glLinkProgram(tmpProgram);
         //检查连接状态
@@ -84,11 +99,19 @@ public class TriangleRender implements GLSurfaceView.Renderer {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
         //使用程序
         GLES30.glUseProgram(program);
+
         //获取 vPosition 属性的位置
         int vposition = GLES30.glGetAttribLocation(program, "vPosition");
         //加载顶点数据到 vPosition 属性位置
         GLES30.glVertexAttribPointer(vposition,3,GLES30.GL_FLOAT,false,0,verticesBuffer);
         GLES30.glEnableVertexAttribArray(vposition);
+
+        //获取 vColor 属性位置
+        int aColor = GLES30.glGetAttribLocation(program, "aColor");
+        //加载顶点颜色数据到 vColor 属性位置
+        GLES30.glEnableVertexAttribArray(aColor);
+        GLES30.glVertexAttribPointer(aColor, 4, GLES30.GL_FLOAT, false, 0, verticeColorsBuffer);
+
         //绘制
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,0,3);
     }
@@ -124,17 +147,21 @@ public class TriangleRender implements GLSurfaceView.Renderer {
     private static final String vertextShaderSource =
             "#version 300 es\n"
                     + "layout (location = 0) in vec4 vPosition;\n"
+                    + "layout (location = 1) in vec4 aColor;\n"
+                    + "out vec4 vColor;\n"
                     + "void main()\n"
                     + "{\n"
                     + "    gl_Position = vPosition;\n"
+                    + "    vColor = aColor;\n"
                     + "}\n";
 
     private static final String fragmentShaderSource =
             "#version 300 es		 			          	\n"
                     + "precision mediump float;					  	\n"
+                    + "in vec4 vColor;					  	\n"
                     + "out vec4 fragColor;	 			 		  	\n"
                     + "void main()                                  \n"
                     + "{                                            \n"
-                    + "  fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );	\n"
+                    + "  fragColor = vColor;	\n"
                     + "}                                            \n";
 }
