@@ -9,14 +9,16 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.demo.openglesdemos.fragment.DemoFragment;
+import com.demo.openglesdemos.fragment.EGLFragment;
 import com.demo.openglesdemos.fragment.TriangleFragment;
 import com.demo.openglesdemos.render.TriangleRender;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnDemo, btnColorTriangle;
+    Button btnDemo, btnColorTriangle, btnEGL;
 
     FragmentManager fragmentManager;
 
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnColorTriangle = findViewById(R.id.btnColorTriangle);
         btnColorTriangle.setOnClickListener(this);
+
+        btnEGL = findViewById(R.id.btnEGL);
+        btnEGL.setOnClickListener(this);
     }
 
 
@@ -39,15 +44,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnDemo:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new DemoFragment())
-                        .commit();
+                transactFragment(new DemoFragment());
                 break;
             case R.id.btnColorTriangle:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new TriangleFragment())
-                        .commit();
+                transactFragment(new TriangleFragment());
+                break;
+            case R.id.btnEGL:
+                transactFragment(new EGLFragment());
                 break;
         }
+    }
+
+    private void transactFragment(Fragment fagment){
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fagment)
+                .commit();
     }
 }
