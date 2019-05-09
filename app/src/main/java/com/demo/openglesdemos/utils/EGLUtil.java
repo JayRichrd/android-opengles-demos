@@ -1,8 +1,13 @@
 package com.demo.openglesdemos.utils;
 
+import android.content.Context;
 import android.opengl.GLES30;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -12,6 +17,31 @@ import java.nio.FloatBuffer;
  */
 public class EGLUtil {
     private static final String TAG = "opengl-demos";
+
+    private static Context context;
+
+    public static void init(Context ctx){
+        context = ctx;
+    }
+
+    public static String loadShaderSource(int resId){
+        StringBuilder res = new StringBuilder();
+
+        InputStream is = context.getResources().openRawResource(resId);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+
+        String nextLine;
+            try {
+                while ((nextLine = br.readLine()) != null) {
+                    res.append(nextLine);
+                    res.append('\n');
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return res.toString();
+    }
 
     /**
      * 加载着色器源，并编译
@@ -98,25 +128,4 @@ public class EGLUtil {
             1.0f, 0.0f, 0.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f
     };
-
-    public static final String VERTEX_SHADER_SOURCE =
-            "#version 300 es\n"
-                    + "layout (location = 0) in vec4 vPosition;\n"
-                    + "layout (location = 1) in vec4 aColor;\n"
-                    + "out vec4 vColor;\n"
-                    + "void main()\n"
-                    + "{\n"
-                    + "    gl_Position = vPosition;\n"
-                    + "    vColor = aColor;\n"
-                    + "}\n";
-
-    public static final String FRAGMENT_SHADER_SOURCE =
-            "#version 300 es		 			          	\n"
-                    + "precision mediump float;					  	\n"
-                    + "in vec4 vColor;					  	\n"
-                    + "out vec4 fragColor;	 			 		  	\n"
-                    + "void main()                                  \n"
-                    + "{                                            \n"
-                    + "  fragColor = vColor;	\n"
-                    + "}                                            \n";
 }

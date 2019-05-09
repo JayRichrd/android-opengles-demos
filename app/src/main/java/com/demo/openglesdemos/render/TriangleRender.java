@@ -2,6 +2,7 @@ package com.demo.openglesdemos.render;
 
 import android.opengl.GLSurfaceView;
 
+import com.demo.openglesdemos.R;
 import com.demo.openglesdemos.utils.EGLUtil;
 
 import java.nio.ByteBuffer;
@@ -35,11 +36,11 @@ public class TriangleRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //获取顶点着色器
-        int vertexShader = EGLUtil.loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_SOURCE);
+        int vertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.triangle_vertex_shader));
         //获取片段着色器
-        int fragmentShader = EGLUtil.loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_SOURCE);
+        int fragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.triangle_fragment_shader));
         //创建并连接程序
-        program = EGLUtil.createAndLinkProgram(vertexShader, fragmentShader);
+        program = createAndLinkProgram(vertexShader, fragmentShader);
         //设置清除渲染时的颜色
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     }

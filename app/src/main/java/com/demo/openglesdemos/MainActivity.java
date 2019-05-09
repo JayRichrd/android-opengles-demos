@@ -16,6 +16,7 @@ import com.demo.openglesdemos.fragment.DemoFragment;
 import com.demo.openglesdemos.fragment.EGLFragment;
 import com.demo.openglesdemos.fragment.TriangleFragment;
 import com.demo.openglesdemos.render.TriangleRender;
+import com.demo.openglesdemos.utils.EGLUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnDemo, btnColorTriangle, btnEGL;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        EGLUtil.init(this);
 
         fragmentManager = getSupportFragmentManager();
 

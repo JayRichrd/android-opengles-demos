@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.Surface;
 
+import com.demo.openglesdemos.R;
+
 import java.nio.FloatBuffer;
 
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
@@ -117,8 +119,8 @@ public class EGLRender extends HandlerThread {
         //指定当前上下文
         eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
         //获取着色器
-        int vertexShader = loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_SOURCE);
-        int fragmentShader = loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_SOURCE);
+        int vertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.triangle_vertex_shader));
+        int fragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.triangle_fragment_shader));
         //创建并连接程序
         int program = createAndLinkProgram(vertexShader, fragmentShader);
         //设置清除渲染时的颜色
