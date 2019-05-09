@@ -28,34 +28,18 @@ public class TriangleRender implements GLSurfaceView.Renderer {
     private int program;
 
     public TriangleRender() {
-        //将顶点数据拷贝映射到 native 内存中，以便opengl能够访问
-        verticesBuffer = ByteBuffer
-                .allocateDirect(VERTEX.length * BYTES_PER_FLOAT)//直接分配 native 内存，不会被gc
-                .order(ByteOrder.nativeOrder())//和本地平台保持一致的字节序（大/小头）
-                .asFloatBuffer();//将底层字节映射到FloatBuffer实例，方便使用
-        verticesBuffer
-                .put(VERTEX)//将顶点拷贝到 native 内存中
-                .position(0);//每次 put position 都会 + 1，需要在绘制前重置为0
-
-        //将顶点颜色数据拷贝映射到 native 内存中，以便opengl能够访问
-        verticeColorsBuffer = ByteBuffer
-                .allocateDirect(VERTEX_COLORS.length * BYTES_PER_FLOAT)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        verticeColorsBuffer
-                .put(VERTEX_COLORS)
-                .position(0);
+        verticesBuffer = getVertextBuffer();
+        verticeColorsBuffer = getVertexColorBuffer();
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //获取顶点着色器
-        int vertextShader = EGLUtil.loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_SOURCE);
+        int vertexShader = EGLUtil.loadShader(GL_VERTEX_SHADER, VERTEX_SHADER_SOURCE);
         //获取片段着色器
         int fragmentShader = EGLUtil.loadShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER_SOURCE);
         //创建并连接程序
-        program = EGLUtil.createAndLinkProgram(vertextShader, fragmentShader);
-        if(program == 0) return;
+        program = EGLUtil.createAndLinkProgram(vertexShader, fragmentShader);
         //设置清除渲染时的颜色
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     }

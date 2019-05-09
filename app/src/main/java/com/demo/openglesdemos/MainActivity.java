@@ -16,8 +16,6 @@ import com.demo.openglesdemos.fragment.TriangleFragment;
 import com.demo.openglesdemos.render.TriangleRender;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "opengl-demos";
-
     Button btnDemo, btnColorTriangle;
 
     FragmentManager fragmentManager;

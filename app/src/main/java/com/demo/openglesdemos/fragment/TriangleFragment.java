@@ -22,8 +22,6 @@ import com.demo.openglesdemos.utils.CommonUtil;
  * A simple {@link Fragment} subclass.
  */
 public class TriangleFragment extends Fragment {
-
-    private static final String TAG = "opengl-demos";
     private static final int GL_VERSION = 3;
 
     private GLSurfaceView glSurfaceView;
@@ -47,7 +45,7 @@ public class TriangleFragment extends Fragment {
         glSurfaceView = view.findViewById(R.id.glsfv);
         //检验是否支持 opengles3.0
         if (!CommonUtil.checkGLVersion(getContext())){
-            Log.e(TAG, "not supported opengl es 3.0+");
+            Log.e(CommonUtil.TAG, "not supported opengl es 3.0+");
             getActivity().finish();
         }
         //使用 opengles 3.0

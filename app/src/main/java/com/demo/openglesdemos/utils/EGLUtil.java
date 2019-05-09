@@ -3,6 +3,10 @@ package com.demo.openglesdemos.utils;
 import android.opengl.GLES30;
 import android.util.Log;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 /**
  * Created by wangyt on 2019/5/9
  */
@@ -39,7 +43,10 @@ public class EGLUtil {
     public static int createAndLinkProgram(int vertextShader, int fragmentShader){
         //创建程序
         int program = GLES30.glCreateProgram();
-        if (program == 0) return 0;//创建失败
+        if (program == 0) {
+            //创建失败
+            throw new RuntimeException("opengl error: 程序创建失败");
+        }
         //绑定着色器到程序
         GLES30.glAttachShader(program, vertextShader);
         GLES30.glAttachShader(program, fragmentShader);
@@ -49,16 +56,35 @@ public class EGLUtil {
         int[] linked = new int[1];
         GLES30.glGetProgramiv(program,GLES30.GL_LINK_STATUS, linked, 0);
         if (linked[0] == 0){
-            Log.e(TAG, "program linked error");
-            Log.e(TAG, GLES30.glGetProgramInfoLog(program));
             GLES30.glDeleteProgram(program);
-            return 0;//连接失败
+            throw new RuntimeException("opengl error: 程序连接失败");
         }
         return program;
     }
 
 
     /*********************** （暂时放这，后面统一组织）**************/
+    public static FloatBuffer getVertextBuffer(){
+        return getFloatBuffer(VERTEX);
+    }
+
+    public static FloatBuffer getVertexColorBuffer(){
+        return getFloatBuffer(VERTEX_COLORS);
+    }
+
+    public static FloatBuffer getFloatBuffer(float[] array){
+        //将顶点数据拷贝映射到 native 内存中，以便opengl能够访问
+        FloatBuffer buffer = ByteBuffer
+                .allocateDirect(array.length * BYTES_PER_FLOAT)//直接分配 native 内存，不会被gc
+                .order(ByteOrder.nativeOrder())//和本地平台保持一致的字节序（大/小头）
+                .asFloatBuffer();//将底层字节映射到FloatBuffer实例，方便使用
+        buffer
+                .put(array)//将顶点拷贝到 native 内存中
+                .position(0);//每次 put position 都会 + 1，需要在绘制前重置为0
+
+        return buffer;
+    }
+
     //float 字节数
     public static final int BYTES_PER_FLOAT = 4;
     //顶点，按逆时针顺序排列
