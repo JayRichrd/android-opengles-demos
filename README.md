@@ -7,3 +7,5 @@
 [android-opengles3.0开发【3】给图形添加颜色](./android-opengles3.0开发【3】给图形添加颜色.md)
 
 [android-opengles3.0开发【4】使用EGL绘制图形](./android-opengles3.0开发【4】使用EGL绘制图形.md)
+
+[android-opengles3.0开发【5】绘制纹理](./android-opengles3.0开发【5】绘制纹理.md)
