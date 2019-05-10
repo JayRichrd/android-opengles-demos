@@ -14,12 +14,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.demo.openglesdemos.fragment.DemoFragment;
 import com.demo.openglesdemos.fragment.EGLFragment;
+import com.demo.openglesdemos.fragment.TextureFragment;
 import com.demo.openglesdemos.fragment.TriangleFragment;
 import com.demo.openglesdemos.render.TriangleRender;
 import com.demo.openglesdemos.utils.EGLUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnDemo, btnColorTriangle, btnEGL;
+    Button btnDemo, btnColorTriangle, btnEGL, btnTexture;
 
     FragmentManager fragmentManager;
 
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnEGL = findViewById(R.id.btnEGL);
         btnEGL.setOnClickListener(this);
+
+        btnTexture= findViewById(R.id.btnTexture);
+        btnTexture.setOnClickListener(this);
     }
 
 
@@ -54,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnEGL:
                 transactFragment(new EGLFragment());
+                break;
+            case R.id.btnTexture:
+                transactFragment(new TextureFragment());
                 break;
         }
     }

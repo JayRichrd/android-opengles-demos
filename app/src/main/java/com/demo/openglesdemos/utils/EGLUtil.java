@@ -1,7 +1,11 @@
 package com.demo.openglesdemos.utils;
 
 import android.content.Context;
-import android.opengl.GLES30;
+import static android.opengl.GLES30.*;
+import static android.opengl.GLUtils.texImage2D;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -24,6 +28,42 @@ public class EGLUtil {
         context = ctx;
     }
 
+    /*********************** 纹理 ************************/
+    public static int loadTexture(int resId){
+        //创建纹理对象
+        int[] textureObjIds = new int[1];
+        //生成纹理：纹理数量、保存纹理的数组，数组偏移量
+        glGenTextures(1, textureObjIds,0);
+        if(textureObjIds[0] == 0){
+            throw new RuntimeException("创建纹理对象失败");
+        }
+        //原尺寸加载位图资源（禁止缩放）
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resId, options);
+        if (bitmap == null){
+            //删除纹理对象
+            glDeleteTextures(1, textureObjIds, 0);
+            throw new RuntimeException("加载位图失败");
+        }
+        //绑定纹理到opengl
+        glBindTexture(GL_TEXTURE_2D, textureObjIds[0]);
+        //设置放大、缩小时的纹理过滤方式，必须设定，否则纹理全黑
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        //将位图加载到opengl中，并复制到当前绑定的纹理对象上
+        texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
+        //创建 mip 贴图
+        glGenerateMipmap(GL_TEXTURE_2D);
+        //释放bitmap资源（上面已经把bitmap的数据复制到纹理上了）
+        bitmap.recycle();
+        //解绑当前纹理，防止其他地方以外改变该纹理
+        glBindTexture(GL_TEXTURE_2D, 0);
+        //返回纹理对象
+        return textureObjIds[0];
+    }
+
+    /*********************** 着色器、程序 ************************/
     public static String loadShaderSource(int resId){
         StringBuilder res = new StringBuilder();
 
@@ -52,18 +92,18 @@ public class EGLUtil {
      */
     public static int loadShader(int type, String shaderSource){
         //创建着色器对象
-        int shader = GLES30.glCreateShader(type);
+        int shader = glCreateShader(type);
         if (shader == 0) return 0;//创建失败
         //加载着色器源
-        GLES30.glShaderSource(shader, shaderSource);
+        glShaderSource(shader, shaderSource);
         //编译着色器
-        GLES30.glCompileShader(shader);
+        glCompileShader(shader);
         //检查编译状态
         int[] compiled = new int[1];
-        GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
+        glGetShaderiv(shader, GL_COMPILE_STATUS, compiled, 0);
         if (compiled[0] == 0) {
-            Log.e(TAG, GLES30.glGetShaderInfoLog(shader));
-            GLES30.glDeleteShader(shader);
+            Log.e(TAG, glGetShaderInfoLog(shader));
+            glDeleteShader(shader);
             return 0;//编译失败
         }
 
@@ -72,21 +112,21 @@ public class EGLUtil {
 
     public static int createAndLinkProgram(int vertextShader, int fragmentShader){
         //创建程序
-        int program = GLES30.glCreateProgram();
+        int program = glCreateProgram();
         if (program == 0) {
             //创建失败
             throw new RuntimeException("opengl error: 程序创建失败");
         }
         //绑定着色器到程序
-        GLES30.glAttachShader(program, vertextShader);
-        GLES30.glAttachShader(program, fragmentShader);
+        glAttachShader(program, vertextShader);
+        glAttachShader(program, fragmentShader);
         //连接程序
-        GLES30.glLinkProgram(program);
+        glLinkProgram(program);
         //检查连接状态
         int[] linked = new int[1];
-        GLES30.glGetProgramiv(program,GLES30.GL_LINK_STATUS, linked, 0);
+        glGetProgramiv(program,GL_LINK_STATUS, linked, 0);
         if (linked[0] == 0){
-            GLES30.glDeleteProgram(program);
+            glDeleteProgram(program);
             throw new RuntimeException("opengl error: 程序连接失败");
         }
         return program;
@@ -100,6 +140,10 @@ public class EGLUtil {
 
     public static FloatBuffer getVertexColorBuffer(){
         return getFloatBuffer(VERTEX_COLORS);
+    }
+
+    public static FloatBuffer getTextureCoordBuffer(){
+        return getFloatBuffer(TEXTURE_COORD);
     }
 
     public static FloatBuffer getFloatBuffer(float[] array){
@@ -127,5 +171,11 @@ public class EGLUtil {
             0.0f, 1.0f, 0.0f, 1.0f,
             1.0f, 0.0f, 0.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f
+    };
+    //纹理坐标，（s,t），t坐标方向和顶点y坐标反着
+    public static final float[] TEXTURE_COORD = {
+            0.5f,0.0f,
+            0.0f,1.0f,
+            1.0f,1.0f
     };
 }
