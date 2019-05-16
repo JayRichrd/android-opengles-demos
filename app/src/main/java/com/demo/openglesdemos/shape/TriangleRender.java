@@ -21,9 +21,9 @@ public class TriangleRender extends BaseRender {
             (VERTEX_ATTRIB_POSITION_SIZE + VERTEX_ATTRIB_COLOR_SIZE) * EGLUtil.BYTES_PER_FLOAT;
     private static final float[] VERTEX_ATTRIBS = {
             //X Y Z R G B A
-            0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-            0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f};
+            0.0f, 1f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+            -1f, -1f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+            1f, -1f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f};
     private static final short[] VERTEX_INDEX = {0, 1, 2};
     //顶点属性buffer
     private FloatBuffer vertexAttribsBuffer;

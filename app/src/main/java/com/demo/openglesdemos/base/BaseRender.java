@@ -6,6 +6,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import static android.opengl.GLES30.*;
+import static android.opengl.Matrix.orthoM;
 import static com.demo.openglesdemos.utils.EGLUtil.createAndLinkProgram;
 import static com.demo.openglesdemos.utils.EGLUtil.loadShader;
 import static com.demo.openglesdemos.utils.EGLUtil.loadShaderSource;
@@ -14,6 +15,8 @@ import static com.demo.openglesdemos.utils.EGLUtil.loadShaderSource;
  * Created by wangyt on 2019/5/16
  */
 public abstract class BaseRender implements GLSurfaceView.Renderer {
+    public static final String VERTEX_ATTRIB_PROJECTION_MATRIX = "matrix";
+    public final float[] projectionMatrix = new float[16];
 
     public int program;
 
@@ -40,6 +43,14 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         //设置视口
         glViewport(0, 0, width, height);
+        //计算正交投影矩阵，修正变形
+        float aspectRatio = width > height ?
+                (float)width / (float)height : (float)height / (float)width;
+        if (width > height){
+            orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
+        }else {
+            orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+        }
     }
 
     @Override
@@ -48,7 +59,10 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT);
         //使用程序
         glUseProgram(program);
-
+        //传入正交矩阵修复变形
+        int matrixLoc = glGetUniformLocation(program, VERTEX_ATTRIB_PROJECTION_MATRIX);
+        glUniformMatrix4fv(matrixLoc, 1, false, projectionMatrix, 0);
+        //绘制
         draw();
     }
 }
