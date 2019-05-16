@@ -22,7 +22,6 @@ public class RectRender extends BaseRender {
     private static final String VERTEX_ATTRIB_POSITION = "vPosition";
     private static final int VERTEX_ATTRIB_POSITION_SIZE = 3;
     private static final String VERTEX_ATTRIB_COLOR = "aColor";
-    private static final int VERTEX_ATTRIB_COLOR_SIZE = 4;
 
     private  float[] vertex ={
             0.0f,0.0f,0.0f,

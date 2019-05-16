@@ -14,7 +14,6 @@ public class CircleRender extends BaseRender {
     private static final String VERTEX_ATTRIB_POSITION = "vPosition";
     private static final int VERTEX_ATTRIB_POSITION_SIZE = 3;
     private static final String VERTEX_ATTRIB_COLOR = "aColor";
-    private static final int VERTEX_ATTRIB_COLOR_SIZE = 4;
 
     private float radius = 1.0f;//圆半径
     private int spanNum = 360;//圆切分成的扇形个数
