@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.fragment;
+package com.demo.openglesdemos.egl;
 
 
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.demo.openglesdemos.R;
-import com.demo.openglesdemos.render.EGLRender;
 
 /**
  * A simple {@link Fragment} subclass.

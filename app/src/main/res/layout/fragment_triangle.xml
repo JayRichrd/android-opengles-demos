@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.TriangleFragment">
+    tools:context=".shape.TriangleFragment">
 
-    <android.opengl.GLSurfaceView
+    <com.demo.openglesdemos.base.BaseGLSurfaceView
         android:id="@+id/glsfv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

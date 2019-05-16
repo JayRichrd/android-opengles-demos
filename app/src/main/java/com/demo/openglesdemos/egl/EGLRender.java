@@ -1,4 +1,6 @@
-package com.demo.openglesdemos.render;
+package com.demo.openglesdemos.egl;
+
+import static android.opengl.EGL14.*;
 
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
@@ -12,70 +14,33 @@ import com.demo.openglesdemos.R;
 
 import java.nio.FloatBuffer;
 
-import static android.opengl.EGL14.EGL_ALPHA_SIZE;
-import static android.opengl.EGL14.EGL_BLUE_SIZE;
-import static android.opengl.EGL14.EGL_BUFFER_SIZE;
-import static android.opengl.EGL14.EGL_CONTEXT_CLIENT_VERSION;
-import static android.opengl.EGL14.EGL_DEFAULT_DISPLAY;
-import static android.opengl.EGL14.EGL_GREEN_SIZE;
-import static android.opengl.EGL14.EGL_NONE;
-import static android.opengl.EGL14.EGL_NO_CONTEXT;
-import static android.opengl.EGL14.EGL_NO_DISPLAY;
-import static android.opengl.EGL14.EGL_OPENGL_ES2_BIT;
-import static android.opengl.EGL14.EGL_RED_SIZE;
-import static android.opengl.EGL14.EGL_RENDERABLE_TYPE;
-import static android.opengl.EGL14.EGL_SURFACE_TYPE;
-import static android.opengl.EGL14.EGL_WINDOW_BIT;
-import static android.opengl.EGL14.eglChooseConfig;
-import static android.opengl.EGL14.eglCreateContext;
-import static android.opengl.EGL14.eglCreateWindowSurface;
-import static android.opengl.EGL14.eglDestroyContext;
-import static android.opengl.EGL14.eglDestroySurface;
-import static android.opengl.EGL14.eglGetDisplay;
-import static android.opengl.EGL14.eglGetError;
-import static android.opengl.EGL14.eglInitialize;
-import static android.opengl.EGL14.eglMakeCurrent;
-import static android.opengl.EGL14.eglSwapBuffers;
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_FRAGMENT_SHADER;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.GL_VERTEX_SHADER;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUseProgram;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
-import static com.demo.openglesdemos.utils.EGLUtil.createAndLinkProgram;
-import static com.demo.openglesdemos.utils.EGLUtil.getTextureCoordBuffer;
-import static com.demo.openglesdemos.utils.EGLUtil.getVertexColorBuffer;
-import static com.demo.openglesdemos.utils.EGLUtil.getVertextBuffer;
-import static com.demo.openglesdemos.utils.EGLUtil.loadShader;
-import static com.demo.openglesdemos.utils.EGLUtil.loadShaderSource;
-import static com.demo.openglesdemos.utils.EGLUtil.loadTexture;
+import static com.demo.openglesdemos.utils.EGLUtil.*;
 
 /**
- * Created by wangyt on 2019/5/10
+ * Created by wangyt on 2019/5/9
  */
-public class TextureRender extends HandlerThread {
+public class EGLRender extends HandlerThread {
 
     private EGLConfig eglConfig;
     private EGLDisplay eglDisplay;
     private EGLContext eglContext;
 
-    public TextureRender() {
-        super("texturerender");
+    public EGLRender() {
+        super("ELGRender");
     }
-
 
     private void createEGL(){
         //获取显示设备
@@ -154,34 +119,28 @@ public class TextureRender extends HandlerThread {
         //指定当前上下文
         eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
         //获取着色器
-        int texVertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.texture_vertex_shader));
-        int texFragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.texture_fragtment_shader));
+        int vertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.triangle_vertex_shader));
+        int fragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.triangle_fragment_shader));
         //创建并连接程序
-        int program = createAndLinkProgram(texVertexShader, texFragmentShader);
+        int program = createAndLinkProgram(vertexShader, fragmentShader);
         //设置清除渲染时的颜色
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         //设置视口
         glViewport(0, 0, width, height);
-        //获取顶点、纹理坐标数据
+        //获取顶点、颜色数据
         FloatBuffer vertexBuffer = getVertextBuffer();
-        FloatBuffer texCoordBuffer = getTextureCoordBuffer();
+        FloatBuffer vertexColorBuffer = getVertexColorBuffer();
         //擦除屏幕
         glClear(GL_COLOR_BUFFER_BIT);
         //使用程序
         glUseProgram(program);
-
-        //绑定顶点、纹理坐标到指定属性位置
-        int aPosition = glGetAttribLocation(program, "a_Position");
-        int aTexCoord = glGetAttribLocation(program, "a_texCoord");
-        glVertexAttribPointer(aPosition,3,GL_FLOAT,false,0,vertexBuffer);
-        glVertexAttribPointer(aTexCoord, 2, GL_FLOAT, false, 0, texCoordBuffer);
-        glEnableVertexAttribArray(aPosition);
-        glEnableVertexAttribArray(aTexCoord);
-        //绑定纹理
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, loadTexture(R.drawable.texture));
-        //Set the sampler texture unit to 0
-        glUniform1i(glGetUniformLocation(program, "s_texture"),0);
+        //绑定顶点、颜色数据到指定属性位置
+        int vposition = glGetAttribLocation(program, "vPosition");
+        glVertexAttribPointer(vposition,3,GL_FLOAT,false,0,vertexBuffer);
+        glEnableVertexAttribArray(vposition);
+        int aColor = glGetAttribLocation(program, "aColor");
+        glEnableVertexAttribArray(aColor);
+        glVertexAttribPointer(aColor, 4, GL_FLOAT, false, 0, vertexColorBuffer);
         //绘制
         glDrawArrays(GL_TRIANGLES,0,3);
         //交换 surface 和显示器缓存

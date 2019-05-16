@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.render;
+package com.demo.openglesdemos.shape;
 
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -9,7 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by wangyt on 2019/5/8
  */
-public class DemoRender implements GLSurfaceView.Renderer {
+public class SimpleRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //清空屏幕所用的颜色

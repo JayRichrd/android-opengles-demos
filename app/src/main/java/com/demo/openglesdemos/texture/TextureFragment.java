@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.fragment;
+package com.demo.openglesdemos.texture;
 
 
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.demo.openglesdemos.R;
-import com.demo.openglesdemos.render.TextureRender;
 
 /**
  * A simple {@link Fragment} subclass.

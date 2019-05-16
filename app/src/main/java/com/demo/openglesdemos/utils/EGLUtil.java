@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * Created by wangyt on 2019/5/9
@@ -25,7 +26,7 @@ public class EGLUtil {
     private static Context context;
 
     public static void init(Context ctx){
-        context = ctx;
+        context = ctx.getApplicationContext();
     }
 
     /*********************** 纹理 ************************/
@@ -147,7 +148,7 @@ public class EGLUtil {
     }
 
     public static FloatBuffer getFloatBuffer(float[] array){
-        //将顶点数据拷贝映射到 native 内存中，以便opengl能够访问
+        //将数据拷贝映射到 native 内存中，以便opengl能够访问
         FloatBuffer buffer = ByteBuffer
                 .allocateDirect(array.length * BYTES_PER_FLOAT)//直接分配 native 内存，不会被gc
                 .order(ByteOrder.nativeOrder())//和本地平台保持一致的字节序（大/小头）
@@ -159,8 +160,22 @@ public class EGLUtil {
         return buffer;
     }
 
-    //float 字节数
+    public static ShortBuffer getShortBuffer(short[] array){
+        //将数据拷贝映射到 native 内存中，以便opengl能够访问
+        ShortBuffer buffer = ByteBuffer
+                .allocateDirect(array.length * BYTES_PER_SHORT)//直接分配 native 内存，不会被gc
+                .order(ByteOrder.nativeOrder())//和本地平台保持一致的字节序（大/小头）
+                .asShortBuffer();//将底层字节映射到Buffer实例，方便使用
+        buffer
+                .put(array)//将顶点拷贝到 native 内存中
+                .position(0);//每次 put position 都会增加，需要在绘制前重置为0
+
+        return buffer;
+    }
+
+    //各数值类型字节数
     public static final int BYTES_PER_FLOAT = 4;
+    public static final int BYTES_PER_SHORT = 2;
     //顶点，按逆时针顺序排列
     public static final float[] VERTEX = {
             0.0f, 0.5f, 0.0f,

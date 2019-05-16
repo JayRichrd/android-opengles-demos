@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.fragment;
+package com.demo.openglesdemos.shape;
 
 
 import android.opengl.GLSurfaceView;
@@ -8,25 +8,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.demo.openglesdemos.R;
-import com.demo.openglesdemos.render.DemoRender;
-import com.demo.openglesdemos.render.TriangleRender;
-import com.demo.openglesdemos.utils.CommonUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TriangleFragment extends Fragment {
+public class SimpleFragment extends Fragment {
+    private static final String TAG = "opengl-demos";
     private static final int GL_VERSION = 3;
 
     private GLSurfaceView glSurfaceView;
 
-    public TriangleFragment() {
+    public SimpleFragment() {
         // Required empty public constructor
     }
 
@@ -35,7 +32,7 @@ public class TriangleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_triangle, container, false);
+        return inflater.inflate(R.layout.fragment_simple, container, false);
     }
 
     @Override
@@ -43,15 +40,10 @@ public class TriangleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //初始化 GLSurfaceView
         glSurfaceView = view.findViewById(R.id.glsfv);
-        //检验是否支持 opengles3.0
-        if (!CommonUtil.checkGLVersion(getContext())){
-            Log.e(CommonUtil.TAG, "not supported opengl es 3.0+");
-            getActivity().finish();
-        }
         //使用 opengles 3.0
         glSurfaceView.setEGLContextClientVersion(GL_VERSION);
         //设置渲染器
-        glSurfaceView.setRenderer(new TriangleRender());
+        glSurfaceView.setRenderer(new SimpleRender());
     }
 
     @Override
@@ -65,5 +57,4 @@ public class TriangleFragment extends Fragment {
         glSurfaceView.onPause();
         super.onPause();
     }
-
 }
