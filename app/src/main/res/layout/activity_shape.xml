@@ -27,6 +27,12 @@
                 android:text="三角形"/>
 
             <Button
+                android:id="@+id/btnRect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="矩形"/>
+
+            <Button
                 android:id="@+id/btnCircle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
