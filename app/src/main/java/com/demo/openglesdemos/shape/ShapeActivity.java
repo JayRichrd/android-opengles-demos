@@ -9,7 +9,7 @@ import com.demo.openglesdemos.R;
 
 public class ShapeActivity extends BaseFragmentActivity implements View.OnClickListener {
 
-    Button btnColor, btnTriangle, btnRect, btnCircle;
+    Button btnColor, btnTriangle, btnRect, btnCircle, btnRect3D;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,9 @@ public class ShapeActivity extends BaseFragmentActivity implements View.OnClickL
 
         btnCircle = findViewById(R.id.btnCircle);
         btnCircle.setOnClickListener(this);
+
+        btnRect3D = findViewById(R.id.btnRect3D);
+        btnRect3D.setOnClickListener(this);
     }
 
     @Override
@@ -43,6 +46,9 @@ public class ShapeActivity extends BaseFragmentActivity implements View.OnClickL
                 break;
             case R.id.btnCircle:
                 transformFragment(new CircleFragment());
+                break;
+            case R.id.btnRect3D:
+                transformFragment(new Rect3DFragment());
                 break;
         }
     }
