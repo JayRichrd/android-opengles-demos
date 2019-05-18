@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.texture;
+package com.demo.openglesdemos.egl;
 
 
 import android.os.Bundle;
@@ -18,11 +18,11 @@ import com.demo.openglesdemos.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TextureFragment extends Fragment {
+public class EGLTextureFragment extends Fragment {
     private SurfaceView surfaceView;
-    private TextureRender textureRender;
+    private EGLTextureRender eglTextureRender;
 
-    public TextureFragment() {
+    public EGLTextureFragment() {
         // Required empty public constructor
     }
 
@@ -31,15 +31,15 @@ public class TextureFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_texture, container, false);
+        return inflater.inflate(R.layout.fragment_texture_egl, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        textureRender = new TextureRender();
-        textureRender.start();
+        eglTextureRender = new EGLTextureRender();
+        eglTextureRender.start();
 
         surfaceView = view.findViewById(R.id.surfaceView);
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -50,7 +50,7 @@ public class TextureFragment extends Fragment {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                textureRender.render(holder.getSurface(), width, height);
+                eglTextureRender.render(holder.getSurface(), width, height);
             }
 
             @Override
@@ -62,8 +62,8 @@ public class TextureFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        textureRender.release();
-        textureRender = null;
+        eglTextureRender.release();
+        eglTextureRender = null;
         super.onDestroy();
     }
 }

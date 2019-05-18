@@ -1,4 +1,4 @@
-package com.demo.openglesdemos.texture;
+package com.demo.openglesdemos.egl;
 
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
@@ -66,13 +66,13 @@ import static com.demo.openglesdemos.utils.EGLUtil.loadTexture;
 /**
  * Created by wangyt on 2019/5/10
  */
-public class TextureRender extends HandlerThread {
+public class EGLTextureRender extends HandlerThread {
 
     private EGLConfig eglConfig;
     private EGLDisplay eglDisplay;
     private EGLContext eglContext;
 
-    public TextureRender() {
+    public EGLTextureRender() {
         super("texturerender");
     }
 
