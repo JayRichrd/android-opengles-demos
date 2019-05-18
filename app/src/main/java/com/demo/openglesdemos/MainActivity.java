@@ -9,12 +9,13 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.demo.openglesdemos.shape.ShapeActivity;
+import com.demo.openglesdemos.texture.TextureActivity;
 import com.demo.openglesdemos.utils.CommonUtil;
 import com.demo.openglesdemos.utils.EGLUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnShape;
+    Button btnShape, btnTexture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnShape = findViewById(R.id.btnShape);
         btnShape.setOnClickListener(this);
+
+        btnTexture = findViewById(R.id.btnTexture);
+        btnTexture.setOnClickListener(this);
     }
 
 
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.btnShape:
                 toActivity(ShapeActivity.class);
+                break;
+            case R.id.btnTexture:
+                toActivity(TextureActivity.class);
                 break;
         }
     }

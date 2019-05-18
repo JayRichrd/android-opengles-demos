@@ -1,10 +1,11 @@
 #version 300 es
 precision mediump float;
 
-in vec2 v_texCoord;
-layout (location = 0) out vec4 outColor;
-uniform sampler2D s_texture;
+in vec2 textureCoord;
+uniform sampler2D tex;
+
+out vec4 outColor;
 
 void main(){
-    outColor = texture(s_texture, v_texCoord);
+    outColor = texture(tex, textureCoord);
 }

@@ -14,4 +14,10 @@
             android:layout_height="wrap_content"
             android:text="绘制图形"/>
 
+        <Button
+            android:id="@+id/btnTexture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="绘制纹理"/>
+
 </LinearLayout>

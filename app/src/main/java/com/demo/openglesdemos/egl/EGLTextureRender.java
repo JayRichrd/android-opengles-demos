@@ -57,7 +57,6 @@ import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
 import static com.demo.openglesdemos.utils.EGLUtil.createAndLinkProgram;
 import static com.demo.openglesdemos.utils.EGLUtil.getTextureCoordBuffer;
-import static com.demo.openglesdemos.utils.EGLUtil.getVertexColorBuffer;
 import static com.demo.openglesdemos.utils.EGLUtil.getVertextBuffer;
 import static com.demo.openglesdemos.utils.EGLUtil.loadShader;
 import static com.demo.openglesdemos.utils.EGLUtil.loadShaderSource;
@@ -154,8 +153,8 @@ public class EGLTextureRender extends HandlerThread {
         //指定当前上下文
         eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
         //获取着色器
-        int texVertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.texture_vertex_shader));
-        int texFragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.texture_fragtment_shader));
+        int texVertexShader = loadShader(GL_VERTEX_SHADER, loadShaderSource(R.raw.egl_texture_vertex_shader));
+        int texFragmentShader = loadShader(GL_FRAGMENT_SHADER, loadShaderSource(R.raw.egl_texture_fragtment_shader));
         //创建并连接程序
         int program = createAndLinkProgram(texVertexShader, texFragmentShader);
         //设置清除渲染时的颜色

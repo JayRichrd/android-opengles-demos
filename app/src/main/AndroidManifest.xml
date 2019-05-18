@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".base.BaseFragmentActivity"></activity>
+        <activity android:name=".texture.TextureActivity"></activity>
+        <activity android:name=".base.BaseFragmentActivity" />
         <activity android:name=".shape.ShapeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
