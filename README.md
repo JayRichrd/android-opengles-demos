@@ -11,3 +11,9 @@
 [android-opengles3.0开发【5】绘制纹理](./android-opengles3.0开发【5】绘制纹理.md)
 
 [android-opengles3.0开发【6】使用正交投影解决图形变形](./android-opengles3.0开发【6】使用正交投影解决图形变形.md)
+
+[android-opengles3.0开发【7】opengles在android相机开发中的应用](https://github.com/WangYantao/android-camera-demos)
+
+
+
+
