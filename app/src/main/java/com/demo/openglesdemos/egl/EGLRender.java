@@ -42,15 +42,15 @@ public class EGLRender extends HandlerThread {
         super("ELGRender");
     }
 
-    private void createEGL(){
+    private void createEGL() {
         //获取显示设备
         eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-        if (eglDisplay == EGL_NO_DISPLAY){
+        if (eglDisplay == EGL_NO_DISPLAY) {
             throw new RuntimeException("egl error:" + eglGetError());
         }
         //初始化EGL
         int[] version = new int[2];
-        if (!eglInitialize(eglDisplay, version,0,version,1)){
+        if (!eglInitialize(eglDisplay, version, 0, version, 1)) {
             throw new RuntimeException("egl error:" + eglGetError());
         }
         //EGL选择配置
@@ -66,25 +66,25 @@ public class EGLRender extends HandlerThread {
         };
         int[] numConfig = new int[1];
         EGLConfig[] configs = new EGLConfig[1];
-        if(!eglChooseConfig(eglDisplay,
+        if (!eglChooseConfig(eglDisplay,
                 configAttribList, 0,
-                configs,0, configs.length,
-                numConfig,0)){
+                configs, 0, configs.length,
+                numConfig, 0)) {
             throw new RuntimeException("egl error:" + eglGetError());
         }
         eglConfig = configs[0];
         //创建ELG上下文
         int[] contextAttribList = {
-                EGL_CONTEXT_CLIENT_VERSION,2,
+                EGL_CONTEXT_CLIENT_VERSION, 2,
                 EGL_NONE
         };
-        eglContext = eglCreateContext(eglDisplay, eglConfig,EGL_NO_CONTEXT,contextAttribList,0);
-        if (eglContext == EGL_NO_CONTEXT){
+        eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, contextAttribList, 0);
+        if (eglContext == EGL_NO_CONTEXT) {
             throw new RuntimeException("egl error:" + eglGetError());
         }
     }
 
-    private void destroyEGL(){
+    private void destroyEGL() {
         eglDestroyContext(eglDisplay, eglContext);
         eglContext = EGL_NO_CONTEXT;
         eglDisplay = EGL_NO_DISPLAY;
@@ -102,7 +102,7 @@ public class EGLRender extends HandlerThread {
         });
     }
 
-    public void release(){
+    public void release() {
         new Handler(getLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -112,7 +112,7 @@ public class EGLRender extends HandlerThread {
         });
     }
 
-    public void render(Surface surface, int width, int height){
+    public void render(Surface surface, int width, int height) {
         //创建屏幕上渲染区域：EGL窗口
         int[] surfaceAttribList = {EGL_NONE};
         EGLSurface eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, surface, surfaceAttribList, 0);
@@ -124,26 +124,25 @@ public class EGLRender extends HandlerThread {
         //创建并连接程序
         int program = createAndLinkProgram(vertexShader, fragmentShader);
         //设置清除渲染时的颜色
-        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        glClearColor(0f, 1.0f, 1.0f, 1.0f);
         //设置视口
         glViewport(0, 0, width, height);
-        //获取顶点、颜色数据
-        FloatBuffer vertexBuffer = getVertextBuffer();
-        FloatBuffer vertexColorBuffer = getVertexColorBuffer();
         //擦除屏幕
         glClear(GL_COLOR_BUFFER_BIT);
         //使用程序
         glUseProgram(program);
         //绑定顶点、颜色数据到指定属性位置
+        FloatBuffer vertexBuffer = getVertexBuffer();
         int vposition = glGetAttribLocation(program, "vPosition");
-        glVertexAttribPointer(vposition,3,GL_FLOAT,false,0,vertexBuffer);
+        glVertexAttribPointer(vposition, 3, GL_FLOAT, false, 0, vertexBuffer);
         glEnableVertexAttribArray(vposition);
+        FloatBuffer vertexColorBuffer = getVertexColorBuffer();
         int aColor = glGetAttribLocation(program, "aColor");
         glEnableVertexAttribArray(aColor);
         glVertexAttribPointer(aColor, 4, GL_FLOAT, false, 0, vertexColorBuffer);
         //绘制
-        glDrawArrays(GL_TRIANGLES,0,3);
-        //交换 surface 和显示器缓存
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //交换surface和显示器缓存
         eglSwapBuffers(eglDisplay, eglSurface);
         //释放
         eglDestroySurface(eglDisplay, eglSurface);

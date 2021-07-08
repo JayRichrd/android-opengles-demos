@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.demo.openglesdemos.R;
 import com.demo.openglesdemos.base.BaseFragmentActivity;
+import com.demo.openglesdemos.egl.EGLFragment;
 import com.demo.openglesdemos.egl.EGLTextureFragment;
 
 public class TextureActivity extends BaseFragmentActivity implements View.OnClickListener {
@@ -26,7 +27,8 @@ public class TextureActivity extends BaseFragmentActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTexture:
-                transformFragment(new TextureFragment());
+                transformFragment(new EGLTextureFragment());
+//                transformFragment(new TextureFragment());
                 break;
         }
     }

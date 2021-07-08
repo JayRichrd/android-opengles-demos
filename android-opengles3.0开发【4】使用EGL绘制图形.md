@@ -1,26 +1,34 @@
-### 简介
+# 1.简介
 
-前面几篇文章通过 GLSurfaceView 进行 opengles 的渲染，使用简单。但是不够灵活，一个 opengl 只能渲染一个 GLSurfaceView，一旦 GLSurfaceView 销毁，对应的 opengl 也会销毁。
+前面几篇文章通过 GLSurfaceView 进行 opengles 的渲染，使用简单。但是不够灵活，==一个opengl只能渲染一个GLSurfaceView，一旦GLSurfaceView销毁，对应的opengl也会销毁==。
 
-使用 EGL 可以避免上述缺点。
+> 说明：Khronos是OpenGL, OpenGL ES, OpenVG和EGL等规范的定义者。
 
-EGL 时渲染 API 和平台原生窗口系统之间的接口，主要任务是：
+==EGL是Khronos组织定义的用于**管理绘图表面** (窗口只是绘图表面的一种类型，还有其他的类型) 的API，EGL提供了OpenGL ES(以及其他Khronos图形API(如 OpenVG))和不同操作系统 (Android、Windows 等) 之间的一个**结合层次**。即EGL定义了 Khronos API如何与底层窗口系统交流，是Khronos定义的规范，相当于一个框架，具体的实现由各个操作系统确定。==它是在OpenGL ES等规范中讨论的概念，故应和这些规范的文档结合起来阅读，且其API的说明文档也应在 Khronos 网站上寻找。
 
-* 查询并初始化设备的可用显示器。
-* 创建渲染表面。
-* 创建渲染上下文。
+> 注意：IOS提供了自己的EGL API 实现，称 EAGL。
 
-### EGL 使用流程
+通常，在Android中，EGL14实现的是EGL 1.4 规范。其相当于Google官方对JAVA的EGL10(EGL 1.0 规范) 的一次重新设计。通常，我们使用EGL14中的函数。而EGL15是 EGL 1.5 规范，其在设计时，仅仅是做了规范的补充，并未重新设计。通常EGL14、EGL15与GLES20等一起使用。GLES20是OpenGL ES 2.0 规范的实现。OpenGL ES 1.x 规范因为是早期版本，受限于机器性能和架构设计等，基本可以不再使用。而OpenGL ES 2.x 规范从Android 2.3 版本后开始支持，目前市面上的所有手机都支持。==相比于1.0，OpenGL ES 2.0引入了可编程图形管线，具体的渲染相关使用专门的着色语言来表达。==
 
-EGL 使用主要步骤很清晰，每个步骤都有相应的方法进行操作。
+使用EGL可以避免上述缺点。
 
-* 与窗口系统通信，获取显示器：eglGetDisplay
-* 初始化EGL：eglInitialize
-* 根据需要，让EGL 选择合适的配置：eglChooseConfig
-* 创建上下文：eglCreateContext
-* 创建渲染区域：EGL窗口：eglCreateWindowSurface
-* 指定当前上下文：eglMakeCurrent
-* 加载着色器、连接程序、绑定数据到属性进行渲染（使用的数据、着色器之类的和前几篇文章一样）
+==EGL是渲染API 和平台原生窗口系统之间的接口==，主要任务是：
+
+* ==查询并初始化设备的可用显示器==。
+* 创建==渲染表面==。
+* 创建==渲染上下文==。
+
+# 2.EGL使用流程
+
+EGL使用主要步骤很清晰，每个步骤都有相应的方法进行操作。
+
+* 与窗口系统通信，==获取显示器==：**eglGetDisplay**
+* ==初始化EGL==：**eglInitialize**
+* 根据需要，==让EGL选择合适的配置==：**eglChooseConfig**
+* ==创建上下文==：**eglCreateContext**
+* ==创建渲染区域==：EGL窗口：**eglCreateWindowSurface**
+* ==指定当前上下文==：**eglMakeCurrent**
+* ==加载着色器、连接程序、绑定数据到属性进行渲染==（使用的数据、着色器之类的和前几篇文章一样）
 
 ```java
     private void createEGL(){
@@ -103,9 +111,9 @@ EGL 使用主要步骤很清晰，每个步骤都有相应的方法进行操作�
     }
 ```
 
-### 基于线程实现渲染器
+# 3.基于线程实现渲染器
 
-opengles 渲染是基于线程的，需要自己实现一个管理 opengles 环境和渲染的线程的渲染器。
+==opengles渲染是基于线程的==，需要自己实现一个==管理opengles环境和渲染的线程==的渲染器。
 
 ```java
 public class EGLRender extends HandlerThread {
@@ -156,7 +164,7 @@ public class EGLRender extends HandlerThread {
 }
 ```
 
-### 使用 SurfaceView 进行显示
+# 4.使用SurfaceView进行显示
 
 布局文件
 
@@ -176,7 +184,7 @@ public class EGLRender extends HandlerThread {
 </RelativeLayout>
 ```
 
-将渲染器与布局中的 SurfaceView 进行关联。
+==将**渲染器**与布局中的**SurfaceView**进行关联==。
 
 ```java
 public class EGLFragment extends Fragment {
@@ -231,6 +239,12 @@ public class EGLFragment extends Fragment {
 }
 ```
 
-### 总结
+# 5.总结
 
-本文梳理了 EGL 的使用流程，基于线程自定义了 EGL 渲染器，将内容显示到 SurfaceView。 
+本文梳理了EGL的使用流程，基于线程自定义了EGL渲染器，将内容显示到SurfaceView。 
+
+ <center>
+    <img src="https://picgo-1256537295.cos.ap-guangzhou.myqcloud.com/pictures/20210708201645.png">
+    <br>
+    <div>图1 EGL使用基本流程</div>
+</center>

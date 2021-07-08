@@ -16,12 +16,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Arrays;
 
 /**
  * Created by wangyt on 2019/5/9
  */
 public class EGLUtil {
-    private static final String TAG = "opengl-demos";
+    private static final String TAG = "EGLUtil";
 
     private static Context context;
 
@@ -54,7 +55,7 @@ public class EGLUtil {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //将位图加载到opengl中，并复制到当前绑定的纹理对象上
         texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
-        //创建 mip 贴图
+        //创建 mip 贴图，能够优化显示效果，但同时也会增大内存占用
         glGenerateMipmap(GL_TEXTURE_2D);
         //释放bitmap资源（上面已经把bitmap的数据复制到纹理上了）
         bitmap.recycle();
@@ -80,6 +81,7 @@ public class EGLUtil {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e(TAG, "loadShaderSource: error msg:" + e.getLocalizedMessage());
             }
         return res.toString();
     }
@@ -94,7 +96,10 @@ public class EGLUtil {
     public static int loadShader(int type, String shaderSource){
         //创建着色器对象
         int shader = glCreateShader(type);
-        if (shader == 0) return 0;//创建失败
+        if (shader == 0){
+            Log.e(TAG, "loadShader fail! type = " + type);
+            return 0;//创建失败
+        }
         //加载着色器源
         glShaderSource(shader, shaderSource);
         //编译着色器
@@ -102,6 +107,7 @@ public class EGLUtil {
         //检查编译状态
         int[] compiled = new int[1];
         glGetShaderiv(shader, GL_COMPILE_STATUS, compiled, 0);
+        Log.i(TAG, "loadShader: compiled = " + Arrays.toString(compiled));
         if (compiled[0] == 0) {
             Log.e(TAG, glGetShaderInfoLog(shader));
             glDeleteShader(shader);
@@ -111,7 +117,7 @@ public class EGLUtil {
         return shader;
     }
 
-    public static int createAndLinkProgram(int vertextShader, int fragmentShader){
+    public static int createAndLinkProgram(int vertexShader, int fragmentShader){
         //创建程序
         int program = glCreateProgram();
         if (program == 0) {
@@ -119,13 +125,14 @@ public class EGLUtil {
             throw new RuntimeException("opengl error: 程序创建失败");
         }
         //绑定着色器到程序
-        glAttachShader(program, vertextShader);
+        glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
         //连接程序
         glLinkProgram(program);
         //检查连接状态
         int[] linked = new int[1];
         glGetProgramiv(program,GL_LINK_STATUS, linked, 0);
+        Log.i(TAG, "createAndLinkProgram: linked = " + Arrays.toString(linked));
         if (linked[0] == 0){
             glDeleteProgram(program);
             throw new RuntimeException("opengl error: 程序连接失败");
@@ -135,7 +142,7 @@ public class EGLUtil {
 
 
     /*********************** （暂时放这，后面统一组织）**************/
-    public static FloatBuffer getVertextBuffer(){
+    public static FloatBuffer getVertexBuffer(){
         return getFloatBuffer(VERTEX);
     }
 
@@ -143,8 +150,8 @@ public class EGLUtil {
         return getFloatBuffer(VERTEX_COLORS);
     }
 
-    public static FloatBuffer getTextureCoordBuffer(){
-        return getFloatBuffer(TEXTURE_COORD);
+    public static FloatBuffer getTextureCoordinateBuffer(){
+        return getFloatBuffer(TEXTURE_COORDINATE);
     }
 
     public static FloatBuffer getFloatBuffer(float[] array){
@@ -153,8 +160,7 @@ public class EGLUtil {
                 .allocateDirect(array.length * BYTES_PER_FLOAT)//直接分配 native 内存，不会被gc
                 .order(ByteOrder.nativeOrder())//和本地平台保持一致的字节序（大/小头）
                 .asFloatBuffer();//将底层字节映射到FloatBuffer实例，方便使用
-        buffer
-                .put(array)//将顶点拷贝到 native 内存中
+        buffer.put(array)//将顶点拷贝到 native 内存中
                 .position(0);//每次 put position 都会 + 1，需要在绘制前重置为0
 
         return buffer;
@@ -178,18 +184,21 @@ public class EGLUtil {
     public static final int BYTES_PER_SHORT = 2;
     //顶点，按逆时针顺序排列
     public static final float[] VERTEX = {
-            0.0f, 0.5f, 0.0f,
+            -0.5f, 0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f};
     //顶点颜色
     public static final float[] VERTEX_COLORS = {
             0.0f, 1.0f, 0.0f, 1.0f,
             1.0f, 0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f
     };
     //纹理坐标，（s,t），t坐标方向和顶点y坐标反着
-    public static final float[] TEXTURE_COORD = {
-            0.5f,0.0f,
+    public static final float[] TEXTURE_COORDINATE = {
+            0.0f,0.0f,
+            1.0f,0.0f,
             0.0f,1.0f,
             1.0f,1.0f
     };
