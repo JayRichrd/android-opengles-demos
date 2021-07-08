@@ -1,7 +1,5 @@
 package com.demo.openglesdemos.texture;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,8 +25,9 @@ public class TextureActivity extends BaseFragmentActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTexture:
-                transformFragment(new EGLTextureFragment());
-//                transformFragment(new TextureFragment());
+//                transformFragment(new EGLTextureFragment());
+//                transformFragment(new EGLFragment());
+                transformFragment(new TextureFragment());
                 break;
         }
     }

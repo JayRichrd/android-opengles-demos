@@ -92,7 +92,7 @@ public class TextureRender extends BaseRender {
 
         //绑定纹理
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, EGLUtil.loadTexture(R.drawable.texture));
+        glBindTexture(GL_TEXTURE_2D, EGLUtil.loadTexture(R.drawable.android_log));
         //Set the sampler texture unit to 0
         glUniform1i(glGetUniformLocation(program, UNIFORM_TEXTURE),0);
 
