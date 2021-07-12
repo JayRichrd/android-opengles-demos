@@ -25,9 +25,9 @@ public class TextureActivity extends BaseFragmentActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTexture:
-//                transformFragment(new EGLTextureFragment());
+                transformFragment(new EGLTextureFragment());
 //                transformFragment(new EGLFragment());
-                transformFragment(new TextureFragment());
+//                transformFragment(new TextureFragment());
                 break;
         }
     }

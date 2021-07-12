@@ -183,23 +183,63 @@ public class EGLUtil {
     public static final int BYTES_PER_FLOAT = 4;
     public static final int BYTES_PER_SHORT = 2;
     //顶点，按逆时针顺序排列
+//    public static final float[] VERTEX = {
+//            -0.5f, 0.5f, 0.0f,
+//            0.5f, 0.5f, 0.0f,
+//            -0.5f, -0.5f, 0.0f,
+//            0.5f, -0.5f, 0.0f};
     public static final float[] VERTEX = {
-            -0.5f, 0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f};
+            // 第一个矩形
+            -1.0f, 1.0f,// 三角形1
+            -1.0f, 0.0f,
+            0.0f, 1.0f,
+            0.0f, 1.0f,// 三角形2
+            -1.0f, 0.0f,
+            0.0f, 0.0f,
+            // 第二个矩形
+            0.0f, 0.0f,// 三角形
+            0.0f, -1.0f,
+            1.0f, 0.0f,
+            1.0f, 0.0f,// 三角形
+            0.0f, -1.0f,
+            1.0f, -1.0f
+    };
     //顶点颜色
     public static final float[] VERTEX_COLORS = {
             0.0f, 1.0f, 0.0f, 1.0f,
             1.0f, 0.0f, 0.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f
     };
     //纹理坐标，（s,t），t坐标方向和顶点y坐标反着
+//    public static final float[] TEXTURE_COORDINATE = {
+//            0.0f,0.0f,
+//            1.0f,0.0f,
+//            0.0f,1.0f,
+//            1.0f,1.0f
+//    };
     public static final float[] TEXTURE_COORDINATE = {
-            0.0f,0.0f,
-            1.0f,0.0f,
-            0.0f,1.0f,
-            1.0f,1.0f
+            //第一个矩形
+            0.0f, 0.0f,//三角形1
+            0.0f, 0.5f,
+            0.5f, 0.0f,
+            0.5f, 0.0f,//三角形2
+            0.0f, 0.5f,
+            0.5f, 0.5f,
+            //第二个矩形
+            0.5f, 0.5f,//三角形1
+            0.5f, 1.0f,
+            1.0f, 0.5f,
+            1.0f, 0.5f,//三角形2
+            0.5f, 1.0f,
+            1.0f, 1.0f
     };
 }

@@ -43,7 +43,9 @@ import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_FRAGMENT_SHADER;
 import static android.opengl.GLES20.GL_TEXTURE0;
+import static android.opengl.GLES20.GL_TEXTURE1;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.GL_TRIANGLES;
 import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
 import static android.opengl.GLES20.GL_VERTEX_SHADER;
 import static android.opengl.GLES20.glActiveTexture;
@@ -173,18 +175,20 @@ public class EGLTextureRender extends HandlerThread {
         glUseProgram(program);
         //绑定顶点、纹理坐标到指定属性位置
         int aPosition = glGetAttribLocation(program, "a_Position");
-        glVertexAttribPointer(aPosition, 3, GL_FLOAT, false, 0, vertexBuffer);
+        glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, 0, vertexBuffer);
         glEnableVertexAttribArray(aPosition);
-        int aTexCoord = glGetAttribLocation(program, "a_texCoord");
-        glVertexAttribPointer(aTexCoord, 2, GL_FLOAT, false, 0, texCoordinateBuffer);
-        glEnableVertexAttribArray(aTexCoord);
+        //int aTexCoord = glGetAttribLocation(program, "a_texCoord");
+        //跟shader中得到location对应起来
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, texCoordinateBuffer);
+        glEnableVertexAttribArray(1);
         //绑定纹理
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, loadTexture(R.drawable.android_log));
         //Set the sampler texture unit to 0
-        glUniform1i(glGetUniformLocation(program, "s_texture"), 0);
+        //设置采样器的位置值
+        glUniform1i(glGetUniformLocation(program, "s_texture"), 1);
         //绘制
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glDrawArrays(GL_TRIANGLES, 0, 12);
         //交换 surface 和显示器缓存
         eglSwapBuffers(eglDisplay, eglSurface);
         //释放
