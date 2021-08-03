@@ -91,6 +91,7 @@ public class EGLTextureRender extends HandlerThread {
     @Override
     public synchronized void start() {
         super.start();
+//        new Handler(getLooper()).post(this::createEGL);
         new Handler(getLooper()).post(this::createEGL);
     }
 
@@ -184,7 +185,7 @@ public class EGLTextureRender extends HandlerThread {
         //绑定纹理
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, loadTexture(R.drawable.android_log));
-        //Set the sampler texture unit to 0
+        //Set the sampler texture unit to 1
         //设置采样器的位置值
         glUniform1i(glGetUniformLocation(program, "s_texture"), 1);
         //绘制

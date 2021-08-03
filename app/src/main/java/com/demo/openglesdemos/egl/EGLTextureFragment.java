@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -48,7 +50,10 @@ public class EGLTextureFragment extends Fragment {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 Log.i(TAG, "surfaceChanged: format = " + format + ", width = " + width + ", height = " + height);
-                eglTextureRender.render(holder.getSurface(), width, height);
+                HandlerThread renderHanderT = new HandlerThread("render_t");
+                renderHanderT.start();
+                Handler renderH = new Handler(renderHanderT.getLooper());
+                renderH.post(() -> eglTextureRender.render(holder.getSurface(), width, height));
             }
 
             @Override
