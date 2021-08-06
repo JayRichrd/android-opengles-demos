@@ -7,5 +7,6 @@ out vec4 out_Color;
 uniform sampler2D s_texture;
 
 void main(){
-    out_Color = texture(s_texture, v_texCoord);
+    vec4 final_color = texture(s_texture, v_texCoord);
+    out_Color = vec4(final_color.g, final_color.g, final_color.g, final_color.a);
 }
